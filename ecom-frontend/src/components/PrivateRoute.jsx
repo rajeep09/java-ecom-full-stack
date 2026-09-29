@@ -4,15 +4,23 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 const PrivateRoute = ({ publicPage = false, adminOnly = false }) => {
     const { user } = useSelector((state) => state.auth);
-    const isAdmin = user && user?.roles?.includes("ROLE_ADMIN");
-    const isSeller = user && user?.roles.includes("ROLE_SELLER");
+    const isAdmin = user?.roles?.includes("ROLE_ADMIN") ?? false;
+    const isSeller = user?.roles?.includes("ROLE_SELLER") ?? false;
     const location = useLocation();
 
     if (publicPage) {
         return user ? <Navigate to="/" /> : <Outlet />
     }
 
+    if (!user) {
+        return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+
     if (adminOnly) {
+        if (isAdmin) {
+            return <Outlet />;
+        }
+
         if (isSeller && !isAdmin) {
             const sellerAllowedPaths = ["/admin/orders", "/admin/products"];
             const sellerAllowed = sellerAllowedPaths.some(path => 
@@ -22,13 +30,11 @@ const PrivateRoute = ({ publicPage = false, adminOnly = false }) => {
                 return <Navigate to="/" replace />
             }
         }
+
+        return <Navigate to="/" replace />;
     }
 
-    if (!isAdmin && !isSeller) {
-        return <Navigate to="/"/>
-    }
-    
-    return user ? <Outlet /> : <Navigate to="/login" />;
+    return <Outlet />;
 }
 
 export default PrivateRoute
