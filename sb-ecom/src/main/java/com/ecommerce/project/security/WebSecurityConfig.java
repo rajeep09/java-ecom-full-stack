@@ -1,8 +1,12 @@
 package com.ecommerce.project.security;
 
 import com.ecommerce.project.model.AppRole;
+import com.ecommerce.project.model.Category;
+import com.ecommerce.project.model.Product;
 import com.ecommerce.project.model.Role;
 import com.ecommerce.project.model.User;
+import com.ecommerce.project.repositories.CategoryRepository;
+import com.ecommerce.project.repositories.ProductRepository;
 import com.ecommerce.project.repositories.RoleRepository;
 import com.ecommerce.project.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +118,11 @@ public class WebSecurityConfig {
 
 
     @Bean
-    public CommandLineRunner initData(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner initData(RoleRepository roleRepository,
+                                     UserRepository userRepository,
+                                     PasswordEncoder passwordEncoder,
+                                     CategoryRepository categoryRepository,
+                                     ProductRepository productRepository) {
         return args -> {
             // Retrieve or create roles
             Role userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
@@ -171,6 +179,61 @@ public class WebSecurityConfig {
                 admin.setRoles(adminRoles);
                 userRepository.save(admin);
             });
+
+            // Seed initial categories if none exist
+            if (categoryRepository.count() == 0) {
+                Category catElectronics = new Category();
+                catElectronics.setCategoryName("Electronics");
+                catElectronics = categoryRepository.save(catElectronics);
+
+                Category catFashion = new Category();
+                catFashion.setCategoryName("Fashion");
+                catFashion = categoryRepository.save(catFashion);
+
+                Category catGroceries = new Category();
+                catGroceries.setCategoryName("Groceries");
+                catGroceries = categoryRepository.save(catGroceries);
+
+                User seller = userRepository.findByUserName("seller1").orElse(null);
+
+                if (seller != null && productRepository.count() == 0) {
+                    Product p1 = new Product();
+                    p1.setProductName("Wireless Bluetooth Headphones");
+                    p1.setDescription("High quality noise-cancelling wireless over-ear headphones with superior bass.");
+                    p1.setImage("default.png");
+                    p1.setQuantity(50);
+                    p1.setPrice(99.99);
+                    p1.setDiscount(10.0);
+                    p1.setSpecialPrice(89.99);
+                    p1.setCategory(catElectronics);
+                    p1.setUser(seller);
+                    productRepository.save(p1);
+
+                    Product p2 = new Product();
+                    p2.setProductName("Smart Fitness Watch");
+                    p2.setDescription("Track steps, heart rate, sleep and fitness activities seamlessly.");
+                    p2.setImage("default.png");
+                    p2.setQuantity(30);
+                    p2.setPrice(49.99);
+                    p2.setDiscount(5.0);
+                    p2.setSpecialPrice(47.49);
+                    p2.setCategory(catElectronics);
+                    p2.setUser(seller);
+                    productRepository.save(p2);
+
+                    Product p3 = new Product();
+                    p3.setProductName("Classic Cotton T-Shirt");
+                    p3.setDescription("Premium 100% breathable organic cotton comfort t-shirt.");
+                    p3.setImage("default.png");
+                    p3.setQuantity(100);
+                    p3.setPrice(19.99);
+                    p3.setDiscount(0.0);
+                    p3.setSpecialPrice(19.99);
+                    p3.setCategory(catFashion);
+                    p3.setUser(seller);
+                    productRepository.save(p3);
+                }
+            }
         };
     }
 
