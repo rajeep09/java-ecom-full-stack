@@ -1,0 +1,17 @@
+# Frontend dependencies and build output
+ecom-frontend/node_modules/
+ecom-frontend/dist/
+ecom-frontend/.env
+ecom-frontend/.env.*
+!ecom-frontend/.env.example
+
+# Backend build output and local database files
+sb-ecom/target/
+sb-ecom/data/
+sb-ecom/images/
+
+# Local editor and operating system files
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini

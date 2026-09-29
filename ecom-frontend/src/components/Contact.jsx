@@ -1,4 +1,4 @@
-import { FaEnvelope, FaMapMarkedAlt, FaPhone } from "react-icons/fa";
+import { FaEnvelope, FaPhone } from "react-icons/fa";
 
 const Contact = () => {
     return(
@@ -54,17 +54,16 @@ const Contact = () => {
                     <div className="flex flex-col items-center space-y-2 mt-4">
                         <div className="flex items-center">
                             <FaPhone className="text-blue-500 mr-2"/>
-                            <span className="text-gray-600">+4 8961 944 149</span>
+                            <a className="text-gray-600 hover:text-blue-600" href="tel:+919301748619">
+                                +91 93017 48619
+                            </a>
                         </div>
 
                         <div className="flex items-center">
                             <FaEnvelope className="text-blue-500 mr-2"/>
-                            <span className="text-gray-600">embarkxofficial@gmail.com</span>
-                        </div>
-
-                        <div className="flex items-center">
-                            <FaMapMarkedAlt className="text-blue-500 mr-2"/>
-                            <span className="text-gray-600">123 Main, Town, USA</span>
+                            <a className="text-gray-600 hover:text-blue-600" href="mailto:rajeevsardar919@gmail.com">
+                                rajeevsardar919@gmail.com
+                            </a>
                         </div>
                     </div>
                 </div>
